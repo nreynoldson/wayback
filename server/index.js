@@ -8,7 +8,7 @@ const app = express();
 const path = require('path');
 
 // Have Node serve the files for our built React app
-app.use(express.static(path.resolve(__dirname, '../app/build')));
+app.use(express.static(path.resolve(__dirname, '../client/build')));
 
 
 app.get('/api/weather', async function(req, res){
@@ -31,7 +31,7 @@ app.get('/api/nutrition', async function(req, res){
 
 // All other GET requests not handled before will return our React app
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../app/build', 'index.html'));
+  res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
 });
 
 
