@@ -1,0 +1,218 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+#root{
+  padding-bottom: 60px;
+}
+
+
+.custom-navbar{
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.nav-item {
+  margin-left: .5rem;
+  font: normal normal normal 16px/24px Comfortaa;
+  letter-spacing: 0px;
+  color: #000000 !important;
+}
+
+
+.nav-logo{
+  height: 30px;
+}
+
+.footer {
+  background-color: #b4d2ba;
+  position: fixed!important;
+  bottom: 0 !important;
+  left: 0;
+  right: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+
+.footer-menu{
+  width: 80%;
+  margin: auto;
+}
+
+.footer-row{
+  padding: 0 !important;
+  margin: 0 !important;
+  justify-content: center !important;
+}
+
+.footer-item {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  font: normal normal normal 12px/24px Comfortaa;
+  color: #FFFFFF !important;
+  padding: 0 !important;
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.footer-item.social-media img{
+  height: 15px;
+  margin-left: .1rem;
+  margin-right: 0.1rem;
+}
+
+.horizontal-dotted-line{
+  height: 5px;
+  width: 100%;
+  margin: 30px 0 30px 0;
+    
+  background-image: url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3E%3Cline x1='0' y1='0' x2='10000' y2='0' stroke='black' stroke-dasharray='10 20' stroke-width='2'/%3E%3C/svg%3E");
+  background-position: top;
+  
+    margin-left: 2rem;
+    margin-right: 2rem;
+} 
+
+.line-container{
+  width:100%;
+  align-items: center;
+  display:flex;
+}
+
+.col{
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /*height: 80vh;*/
+}
+
+.icon-wrapper{
+  max-width: 30px;
+  height: auto;
+  display: inline-block;
+  float: left;
+  margin-right: 5px;
+}
+.icon{
+  max-width:100%;
+  max-height:100%;
+}
+
+.textbox{
+  width: 100%;
+  margin: 20px;
+}
+
+.navbar-brand > h3{
+  font: normal normal bold 20px/25px Comfortaa !important;
+  text-transform: uppercase;
+  margin-top: 10px;
+  color: #3a3e3b;
+}
+
+.textbox > hr {
+  border-top: 2px solid rgba(0,0,0,.1);
+  width: 70%;
+  margin: auto;
+}
+
+.title{
+  font: normal normal bold 40px/50px Comfortaa !important;
+  letter-spacing: 0px;
+  color: #000000;
+  text-transform: uppercase;
+}
+
+#home-copy{
+  font: normal normal 300 16px/24px Comfortaa;
+letter-spacing: 0px;
+color: #000000;
+text-align: center;
+}
+
+.button{
+  background: #F49D6E 0% 0% no-repeat padding-box;
+border-radius: 100px;
+border-width: 0px 3px 3px 0px;
+text-align: center;
+font: normal normal bold 16px/40px Comfortaa;
+letter-spacing: 0px;
+color: #000000;
+padding: 0px 30px 0px 30px;
+margin: 0px 5px 5px 5px;
+width: 150px;
+}
+
+select{
+  margin: 0 10px 10px 10px;
+  width: 140px;
+  text-align-last: center; text-align: center;
+  -ms-text-align-last: center;
+  -moz-text-align-last: center; text-align-last: center;
+  border-radius: 5px;
+}
+
+#img-wrapper{
+  display: flex;
+  
+  height: 500px;
+  margin: auto;
+}
+
+.card-wrapper{
+  width: 80%;
+}
+
+.content{
+  margin: 20px;
+}
+
+
+.blank{
+  height: 200px;
+}
+
+.inputRow{
+  margin-top: 50px;
+  text-align: center;
+}
+
+.form-group .buttons{
+  display: flex !important;
+  justify-content: space-between !important;
+}
+
+.card-img-top{
+    /* flex-shrink: 0; */
+    width: 100%;
+    /* width: 200px; */
+    max-height: 280px;
+    min-height: 280px;
+    /* height: 100%; */
+    object-fit: cover;
+}
+
+.select-wrapper{
+  float: left;
+}
+#select-form{
+  display: inline-block !important;
+  margin: auto !important;
+}
+
+.error{
+  border:2px solid red;
+}
