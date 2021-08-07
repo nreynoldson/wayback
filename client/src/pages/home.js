@@ -104,9 +104,9 @@ export default class Home extends Component {
         if(this.state.eventView){
             eventCards = (
             <div>
-              <Row><i class="bi bi-caret-left"></i>
+              <Row><i className="bi bi-caret-left"></i>
               <div className="horizontal-dotted-line"></div>
-              <i class="bi bi-caret-right"></i>
+              <i className="bi bi-caret-right"></i>
               </Row>
               <Row><Col className="col">
             <h1 className="title">{MONTHS[this.state.month]} {this.state.day}{dayEnding} </h1>
