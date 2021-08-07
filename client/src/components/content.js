@@ -41,6 +41,9 @@ export default class Content extends Component {
           
           xhr.open("GET", url, true);
           xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
+          xhr.setRequestHeader('Access-Control-Allow-Origin: *');
+          xhr.setRequestHeader('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
+          xhr.setRequestHeader('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
           xhr.onload = function(){
               if(xhr.status == 200){
                   var response = JSON.parse(xhr.responseText);
