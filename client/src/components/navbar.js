@@ -16,7 +16,7 @@ export default class CustomNav extends Component {
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="ml-auto">
+                <Nav className="ms-auto">
                 <Nav.Link className="nav-item" href="#home">Home</Nav.Link>
                 <Nav.Link className="nav-item" href="#generator">Contact</Nav.Link>
                 </Nav>

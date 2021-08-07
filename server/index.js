@@ -6,6 +6,9 @@ const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 const app = express();
 
 const path = require('path');
+var cors = require('cors')
+
+app.use(cors());
 
 // Have Node serve the files for our built React app
 app.use(express.static(path.resolve(__dirname, '../client/build')));

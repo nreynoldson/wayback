@@ -30,16 +30,66 @@ export default class Content extends Component {
             personDesc: ''
         }
         this.getImages = this.getImages.bind(this);
+        this.searchImages = this.searchImages.bind(this);
     }
 
-    getImages(){
-        //TODO: should be implemented with image microservice for now cycle through images
-        if(NUM > 2)
-            NUM = 0;
-        else
-            NUM++;
+    searchImages(searchTerm){
+        var url = 'http://ddg-image-search.herokuapp.com/search?q=' + searchTerm + '&num=' + 1;
+        console.log(url);
+        return new Promise((resolve, reject) => {
+          var xhr = new XMLHttpRequest();
+          
+          xhr.open("GET", url, true);
+          xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
+          xhr.onload = function(){
+              if(xhr.status == 200){
+                  var response = JSON.parse(xhr.responseText);
+                  if(!Object.keys(response.data).length){
+                    response = null;
+                }
+                  
+                  console.log(response)
+                  resolve(response);
+              }
+              else{
+                  reject();
+              }
+          }
+      
+          xhr.send();
+      });
+    }
 
-        return [PEOPLE[NUM], EVENTS[NUM]];
+    async getImages(){
+        var eLinks = this.props.events[0].links.length;
+        var i = 0
+        var event = null;
+        while(event == null && i < eLinks){
+            event = await this.searchImages(this.props.events[0].links[i].title);
+            i++;
+        }
+        if(event == null)
+            event.url = "http://www.history-lab.uom.gr/en/wp-content/uploads/sites/3/2019/10/history-world-map.jpg";
+        
+
+        console.log(event);
+
+        var pLinks = this.props.people[0].links.length;
+        i = 0;
+        var person = null;
+        
+        while(person == null && i < pLinks){
+            var person = await this.searchImages(this.props.births[0].links[0].title);
+            i++;
+        }
+        
+        if(person == null){
+            person.url = "https://about-history.com/wp-content/uploads/2017/06/now-46c78ae9-71a6-4434-b1d8-539705e0771a-1210-680.jpg";
+        }
+
+        console.log(person);
+        if(this.event != null && this.person != null)
+            this.setState({personImg: person.url, eventImg: event.url});
 
     }
 
@@ -49,18 +99,18 @@ export default class Content extends Component {
     }
 
     componentDidMount(){
-        var imgURLs = this.getImages();
+        this.getImages();
         var personDescription = this.getDescription();
         var weather = selectWeatherImg(this.props.weather.data[0].descriptor);
-        this.setState({personImg: imgURLs[0], eventImg: imgURLs[1], weatherImg: weather, personDesc: personDescription});
+        this.setState({weatherImg: weather, personDesc: personDescription});
     }
 
     componentDidUpdate(prevProps){
         if(this.props.births != prevProps.births){
-            var imgURLs = this.getImages();
+            this.getImages();
             var weather = selectWeatherImg(this.props.weather.data[0].descriptor);
             var personDescription = this.getDescription();
-            this.setState({personImg: imgURLs[0], eventImg: imgURLs[1], weatherImg: weather, personDesc: personDescription});
+            this.setState({weatherImg: weather, personDesc: personDescription});
         
         }
     }

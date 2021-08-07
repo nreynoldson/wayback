@@ -5,6 +5,7 @@ import Content from '../components/content';
 import {Container, Row, Col} from 'react-bootstrap';
 import DateForm from '../components/form';
 import './App.css';
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 const MONTHS = ['null', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -41,7 +42,7 @@ export default class Home extends Component {
     }
 
     requestEvent(month, day){
-        var url = 'https://history.muffinlabs.com/date/' + month + '/' + day;
+        var url = 'http://history.muffinlabs.com/date/' + month + '/' + day;
         return new Promise((resolve, reject) => {
             var xhr = new XMLHttpRequest();
             
@@ -65,11 +66,12 @@ export default class Home extends Component {
 
 
     requestWeather(month, day){
-      var url = 'https://way-back.herokuapp.com/api/weather?m=' + month + '&d=' + day;
+      var url = 'http://localhost:3001/api/weather?m=' + month + '&d=' + day;
       return new Promise((resolve, reject) => {
           var xhr = new XMLHttpRequest();
           
           xhr.open("GET", url, true);
+          xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
           xhr.onload = function(){
               if(xhr.status == 200){
                   var response = JSON.parse(xhr.responseText);
@@ -102,7 +104,10 @@ export default class Home extends Component {
         if(this.state.eventView){
             eventCards = (
             <div>
+              <Row><i class="bi bi-caret-left"></i>
               <div className="horizontal-dotted-line"></div>
+              <i class="bi bi-caret-right"></i>
+              </Row>
               <Row><Col className="col">
             <h1 className="title">{MONTHS[this.state.month]} {this.state.day}{dayEnding} </h1>
             

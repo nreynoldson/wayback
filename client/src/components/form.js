@@ -1,5 +1,6 @@
 import React, { Component, Select } from 'react';
 import {Form, Button} from 'react-bootstrap';
+import {randomDate} from '../utility/randomDate';
 
 
 export default class DateForm extends Component {
@@ -14,6 +15,7 @@ export default class DateForm extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.dayOnSelect = this.dayOnSelect.bind(this);
         this.monthOnSelect = this.monthOnSelect.bind(this);
+        this.handleRandom = this.handleRandom.bind(this)
     }
 
     handleChange = (e) => {
@@ -27,6 +29,12 @@ export default class DateForm extends Component {
                 this.setState({error: "error"});
             }
         }
+    }
+
+    handleRandom = (e) => {
+        e.preventDefault();
+        var date = randomDate();
+        this.props.onSubmit(date[0], date[1]);
     }
 
     monthOnSelect(m){
@@ -50,8 +58,8 @@ export default class DateForm extends Component {
                 </Form.Group>
 
                 <Form.Group className="buttons">
-                    <button className="button" onClick = {this.handleChange}>GO</button>
-                    <button className="button" onClick = {this.handleChange}>RANDOM</button>
+                    <button className="button"  onClick = {this.handleChange}>GO</button>
+                    <button className="button" onClick = {this.handleRandom}>RANDOM</button>
                 </Form.Group>
             </Form>
         )

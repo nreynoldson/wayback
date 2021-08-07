@@ -77,12 +77,10 @@ a {
   height: 5px;
   width: 100%;
   margin: 30px 0 30px 0;
+  flex: 4;
     
   background-image: url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3E%3Cline x1='0' y1='0' x2='10000' y2='0' stroke='black' stroke-dasharray='10 20' stroke-width='2'/%3E%3C/svg%3E");
   background-position: top;
-  
-    margin-left: 2rem;
-    margin-right: 2rem;
 } 
 
 .line-container{
@@ -114,6 +112,14 @@ a {
 .textbox{
   width: 100%;
   margin: 20px;
+}
+
+.navbar-brand{
+  margin-left: 1rem;
+}
+
+.nav-item{
+  margin-right: 0.5rem;
 }
 
 .navbar-brand > h3{
@@ -215,4 +221,19 @@ select{
 
 .error{
   border:2px solid red;
+}
+
+.card-deck{
+  display: flex;
+  flex-direction: row;
+}
+
+.card{
+  flex: 1;
+  margin: 0.6rem;
+}
+
+.bi{
+  flex: 0.2;
+  font-size: 40px;
 }
