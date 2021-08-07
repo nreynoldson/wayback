@@ -42,7 +42,7 @@ export default class Home extends Component {
     }
 
     requestEvent(month, day){
-        var url = 'http://history.muffinlabs.com/date/' + month + '/' + day;
+        var url = 'https://history.muffinlabs.com/date/' + month + '/' + day;
         return new Promise((resolve, reject) => {
             var xhr = new XMLHttpRequest();
             
@@ -66,7 +66,7 @@ export default class Home extends Component {
 
 
     requestWeather(month, day){
-      var url = 'http://localhost:3001/api/weather?m=' + month + '&d=' + day;
+      var url = 'https://way-back.herokuapp.com/api/weather?m=' + month + '&d=' + day;
       return new Promise((resolve, reject) => {
           var xhr = new XMLHttpRequest();
           

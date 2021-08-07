@@ -34,7 +34,7 @@ export default class Content extends Component {
     }
 
     searchImages(searchTerm){
-        var url = 'http://ddg-image-search.herokuapp.com/search?q=' + searchTerm + '&num=' + 1;
+        var url = 'https://ddg-image-search.herokuapp.com/search?q=' + searchTerm + '&num=' + 1;
         console.log(url);
         return new Promise((resolve, reject) => {
           var xhr = new XMLHttpRequest();
