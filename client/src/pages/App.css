@@ -233,7 +233,15 @@ select{
   margin: 0.6rem;
 }
 
-.bi{
+.divider > .bi{
   flex: 0.2;
   font-size: 40px;
+}
+
+.card-title{
+  display: flex;
+}
+
+.card-title > span{
+  flex: 1;
 }

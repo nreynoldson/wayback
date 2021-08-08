@@ -1,6 +1,6 @@
 import React, { Component, Select } from 'react';
 import {Form, Button} from 'react-bootstrap';
-import {randomDate} from '../utility/randomDate';
+import {randomDate} from '../utility/dateFunctions';
 
 
 export default class DateForm extends Component {

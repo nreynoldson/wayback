@@ -32,13 +32,33 @@ app.get('/api/nutrition', async function(req, res){
     res.status(200).json(response);
 });
 
+app.get('/api/image', async function(req, res){
+    var search = req.query.q;
+    var response = await searchImages(search);
+
+    res.status(200).json(response);
+});
+
 // All other GET requests not handled before will return our React app
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
 });
 
 
+const WEATHER = ["rain", "snow", "thunder", "tornado", "hurricane",
+                 "high temperature", "low temperature", "hail",
+                 "blizzard", "fire"]
 
+function assignTitle(description){
+    for(var term of WEATHER){
+        var re = new RegExp(term,"g");
+        var match = description.match(re);
+        if(match != null){
+            return WEATHER[term];
+        }
+    }
+    return "weather";
+}
 
 async function getWeather(month, day){
     var url = 'https://www.weatherforyou.com/weather_history/index.php?m=' + month +'&d=' + day + '&y=2020';
@@ -59,20 +79,51 @@ async function getWeather(month, day){
                 descriptor= descriptor.replace(/ *\([^)]*\) */g, "");
                 
                 var obj = {
+                    title: '',
                     year: year,
-                    descriptor: descriptor
+                    text: descriptor,
+                    links: [{title: assignTitle(descriptor)}]
                 }
 			    events.push(obj);
             }
 		});
         results.data = events;
-        console.log(results);
 		return results;
 	} catch (error) {
 		throw error;
 	}
 };
 
+
+function searchImages(searchTerm){
+    var url = 'https://ddg-image-search.herokuapp.com/search?q=' + searchTerm + '&num=' + 1;
+    console.log(url);
+    return new Promise((resolve, reject) => {
+      var xhr = new XMLHttpRequest();
+      
+      xhr.open("GET", url, true);
+      xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
+      xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
+      xhr.setRequestHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
+      xhr.setRequestHeader('Access-Control-Allow-Headers', 'Origin, Content-Type, X-Auth-Token');
+      xhr.onload = function(){
+          if(xhr.status == 200){
+              var response = JSON.parse(xhr.responseText);
+              if(response.length == 0){
+                response = null;
+            }
+              
+              console.log(response)
+              resolve(response[0]);
+          }
+          else{
+              reject();
+          }
+      }
+  
+      xhr.send();
+  });
+}
 
 const API_URL = "https://api.nal.usda.gov/fdc/";
 const API_KEY = "jSPHdduZ8NZjanxjCvpWmjT4bbQQamep8yvcD2gx";
@@ -95,7 +146,7 @@ function search(ing){
                         ingredient = item;
                         break;
                     }
-
+    
                 }
                 resolve(ingredient);
             }
@@ -108,21 +159,34 @@ function search(ing){
     });
 }
 
+
+NUTRIENTS = {
+    calories: 1008,
+    protein: 1003,
+    fat: 1004,
+    carbs: 1005
+}
 async function getNutritionals(ing, qty){
     var ingredient = await search(ing);
+    console.log(ingredient);
     if(!qty)
         qty = 100;
-    var nutrients = ingredient.foodNutrients;
-    var nutritionals = {
-        item: ingredient.description,
-        protein: nutrients[0].value * qty/100,
-        fat: nutrients[1].value * qty/100,
-        carbs: nutrients[2].value * qty/100,
-        calories: nutrients[3].value * qty/100
-    };
-    console.log(nutritionals);
+    var foodNutrients = ingredient.foodNutrients;
 
-    return nutritionals;
+    response.item = ingredient.description;
+    var response = {};
+    for(nutrient in NUTRIENTS){
+        console.log(nutrient)
+        console.log(NUTRIENTS[nutrient]);
+        var result = foodNutrients.filter(obj => {
+            return obj.nutrientId == NUTRIENTS[nutrient];
+        });
+        response[nutrient] = (result[0].value * qty / 100).toFixed(2);
+    }
+    
+    console.log(response);
+
+    return response;
 }
 
 

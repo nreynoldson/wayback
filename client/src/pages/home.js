@@ -3,6 +3,7 @@ import CustomNav from '../components/navbar';
 import Footer from '../components/footer';
 import Content from '../components/content';
 import {Container, Row, Col} from 'react-bootstrap';
+import {getNextDay, getPrevDay} from '../utility/dateFunctions';
 import DateForm from '../components/form';
 import './App.css';
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -24,6 +25,8 @@ export default class Home extends Component {
       this.onSubmit = this.onSubmit.bind(this);
       this.requestEvent = this.requestEvent.bind(this);
       this.requestWeather = this.requestWeather.bind(this);
+      this.previousDate = this.previousDate.bind(this);
+      this.nextDate = this.nextDate.bind(this);
     }
 
     async onSubmit(m, d){
@@ -42,7 +45,7 @@ export default class Home extends Component {
     }
 
     requestEvent(month, day){
-        var url = 'https://history.muffinlabs.com/date/' + month + '/' + day;
+        var url = 'http://history.muffinlabs.com/date/' + month + '/' + day;
         return new Promise((resolve, reject) => {
             var xhr = new XMLHttpRequest();
             
@@ -87,6 +90,16 @@ export default class Home extends Component {
       });
   }
 
+  previousDate(){
+    var date = getPrevDay(this.state.month, this.state.day);
+    this.onSubmit(date[0], date[1]);
+  }
+
+  nextDate(){
+    var date = getNextDay(this.state.month, this.state.day);
+    this.onSubmit(date[0], date[1]);
+  }
+
 
     render(){
         var dayEnding;
@@ -104,9 +117,9 @@ export default class Home extends Component {
         if(this.state.eventView){
             eventCards = (
             <div>
-              <Row><i className="bi bi-caret-left"></i>
+              <Row className="divider"><i className="bi bi-caret-left" onClick={this.previousDate}></i>
               <div className="horizontal-dotted-line"></div>
-              <i className="bi bi-caret-right"></i>
+              <i className="bi bi-caret-right" onClick={this.nextDate}></i>
               </Row>
               <Row><Col className="col">
             <h1 className="title">{MONTHS[this.state.month]} {this.state.day}{dayEnding} </h1>
@@ -119,7 +132,8 @@ export default class Home extends Component {
             events={this.state.events}
             births={this.state.births}
             deaths={this.state.deaths}
-            weather={this.state.weather}></Content>
+            weather={this.state.weather}
+            ></Content>
             </Col>
           </Row></div>);
         }
