@@ -26,9 +26,7 @@ app.get('/api/nutrition', async function(req, res){
     var item = req.query.item;
     var qty = req.query.qty;
     var response = await getNutritionals(item, qty);
-    console.log(response);
-    
-    //console.log(response);
+
     res.status(200).json(response);
 });
 
@@ -97,7 +95,7 @@ async function getWeather(month, day){
 
 function searchImages(searchTerm){
     var url = 'https://ddg-image-search.herokuapp.com/search?q=' + searchTerm + '&num=' + 1;
-    console.log(url);
+
     return new Promise((resolve, reject) => {
       var xhr = new XMLHttpRequest();
       
@@ -113,7 +111,6 @@ function searchImages(searchTerm){
                 response = null;
             }
               
-              console.log(response)
               resolve(response[0]);
           }
           else{
@@ -129,9 +126,7 @@ const API_URL = "https://api.nal.usda.gov/fdc/";
 const API_KEY = "jSPHdduZ8NZjanxjCvpWmjT4bbQQamep8yvcD2gx";
 
 function search(ing){
-    console.log("in search");
     url = API_URL + "v1/foods/search/?query=" + ing + "&api_key=" + API_KEY;
-    console.log(url);
     return new Promise((resolve, reject) => {
         var xhr = new XMLHttpRequest();
         
@@ -168,23 +163,19 @@ NUTRIENTS = {
 }
 async function getNutritionals(ing, qty){
     var ingredient = await search(ing);
-    console.log(ingredient);
+    
     if(!qty)
         qty = 100;
     var foodNutrients = ingredient.foodNutrients;
 
-    response.item = ingredient.description;
     var response = {};
+    response.item = ingredient.description;
     for(nutrient in NUTRIENTS){
-        console.log(nutrient)
-        console.log(NUTRIENTS[nutrient]);
         var result = foodNutrients.filter(obj => {
             return obj.nutrientId == NUTRIENTS[nutrient];
         });
         response[nutrient] = (result[0].value * qty / 100).toFixed(2);
     }
-    
-    console.log(response);
 
     return response;
 }
