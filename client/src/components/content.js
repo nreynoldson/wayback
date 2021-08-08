@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {CardDeck} from 'react-bootstrap';
-import {ContentCard} from '../cards';
+import ContentCard from '../components/cards';
 
 export default class Content extends Component {
     constructor(props){

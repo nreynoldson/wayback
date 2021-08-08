@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Card} from 'react-bootstrap';
 
 
-IMG_DEFAULT = {
+var IMG_DEFAULT = {
     "Notable Events": "http://www.history-lab.uom.gr/en/wp-content/uploads/sites/3/2019/10/history-world-map.jpg",
     "Born on this day": "https://about-history.com/wp-content/uploads/2017/06/now-46c78ae9-71a6-4434-b1d8-539705e0771a-1210-680.jpg"
 }
