@@ -1,6 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const cheerio = require('cheerio');
+const stringSimilarity = require("string-similarity");
 
 const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 const app = express();
@@ -26,8 +27,10 @@ app.get('/api/nutrition', async function(req, res){
     var item = req.query.item;
     var qty = req.query.qty;
     var response = await getNutritionals(item, qty);
-
-    res.status(200).json(response);
+    if(response != null)
+        res.status(200).json(response);
+    else
+        res.status(404).json({error: "Ingredient not found"});
 });
 
 app.get('/api/image', async function(req, res){
@@ -135,15 +138,7 @@ function search(ing){
         xhr.onload = function(){
             if(xhr.status == 200){
                 var response = JSON.parse(xhr.responseText);
-                var ingredient;
-                for(item of response.foods){
-                    if(item.dataType !== 'Branded'){
-                        ingredient = item;
-                        break;
-                    }
-    
-                }
-                resolve(ingredient);
+                resolve(response);
             }
             else{
                 reject();
@@ -162,21 +157,70 @@ NUTRIENTS = {
     carbs: 1005
 }
 async function getNutritionals(ing, qty){
-    var ingredient = await search(ing);
-    
-    if(!qty)
-        qty = 100;
-    var foodNutrients = ingredient.foodNutrients;
-
-    var response = {};
-    response.item = ingredient.description;
-    for(nutrient in NUTRIENTS){
-        var result = foodNutrients.filter(obj => {
-            return obj.nutrientId == NUTRIENTS[nutrient];
-        });
-        response[nutrient] = (result[0].value * qty / 100).toFixed(2);
+    var list = await search(ing);
+    console.log(list);
+    if(!list.foods.length){
+        return null;
     }
 
+    descriptions = []
+    //Get the descriptions in an array to find the best match
+    for(item of list.foods){
+        descriptions.push(item.description)
+    }
+
+    var missingNutrient = true;
+    var response = {};
+
+    var match = stringSimilarity.findBestMatch(ing, descriptions);
+    console.log(match);
+
+    // Get the object containing the best match data
+    var ingredient; 
+    var index;
+
+    // If no qty is provided, use the default of 100g
+    if(!qty)
+        qty = 100;
+
+    var firstIteration = true;
+
+    while(missingNutrient){
+        console.log("top of while loop")
+        if(firstIteration){
+            ingredient = list.foods[match.bestMatchIndex];
+            index = match.bestMatchIndex;
+            firstIteration = false;
+        }
+        console.log(ingredient);
+        var foodNutrients = ingredient.foodNutrients;
+
+        response.item = ingredient.description;
+
+        for(nutrient in NUTRIENTS){
+            var result = foodNutrients.filter(obj => {
+                return obj.nutrientId == NUTRIENTS[nutrient];
+            });
+            console.log(result);
+            if(!result.length){
+                console.log("!result.length");
+                // Remove the first best match from the array
+                match.ratings.splice(index, 1);
+                list.foods.splice(index, 1)
+
+                // Get the second highest match
+                bestRating = Math.max.apply(Math, array.map(function(o) { return o.rating; }));
+                index = match.ratings.map(function(e) { return e.rating; }).indexOf(bestRating);
+                ingredient = list.foods[index];
+                console.log(ingredient);
+                break;
+            }
+
+            response[nutrient] = (result[0].value * qty / 100).toFixed(2);
+        }
+        missingNutrient = false;
+    } 
+    console.log(response);
     return response;
 }
 

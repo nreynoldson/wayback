@@ -11,7 +11,6 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 const MONTHS = ['null', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 export default class Home extends Component {
-
     constructor(props){
       super(props)
       this.state ={
@@ -39,7 +38,7 @@ export default class Home extends Component {
             events: events.data.Events,
             births: events.data.Births,
             deaths: events.data.Deaths,
-            weather: weather
+            weather: weather.data
         });
 
     }
