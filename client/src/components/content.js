@@ -8,12 +8,15 @@ export default class Content extends Component {
     }
 
     render() {
+        console.log(this.props.births);
+        console.log(this.props.events);
+        console.log(this.props.weather);
         return (
             <div className = "card-wrapper">
                 <CardDeck>
-                    <ContentCard title={"Born on this day"} content={this.props.events}></ContentCard>
-                    <ContentCard title={"Notable Events"} content={this.props.births}></ContentCard>
-                    <ContentCard title={"Weather"} content={this.props.weather}></ContentCard>
+                    <ContentCard cardTitle={"Notable Events"} content={this.props.events}></ContentCard>
+                    <ContentCard cardTitle={"Born on this day"} content={this.props.births}></ContentCard>
+                    <ContentCard cardTitle={"Weather"} content={this.props.weather}></ContentCard>
                 </CardDeck>
 
                 <div className="blank"></div>

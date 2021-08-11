@@ -52,8 +52,6 @@ export default class Home extends Component {
             xhr.onload = function(){
                 if(xhr.status == 200){
                     var response = JSON.parse(xhr.responseText);
-                    console.log(response)
-                    console.log(response.data.Events)
                     resolve(response);
                 }
                 else{
@@ -67,8 +65,9 @@ export default class Home extends Component {
 
 
 
-    requestWeather(month, day){
-      var url = 'https://way-back.herokuapp.com/api/weather?m=' + month + '&d=' + day;
+    async requestWeather(month, day){
+      /*
+      var url = 'http://localhost:3001/api/weather?m=' + month + '&d=' + day;
       return new Promise((resolve, reject) => {
           var xhr = new XMLHttpRequest();
           
@@ -77,7 +76,6 @@ export default class Home extends Component {
           xhr.onload = function(){
               if(xhr.status == 200){
                   var response = JSON.parse(xhr.responseText);
-                  console.log(response)
                   resolve(response);
               }
               else{
@@ -86,7 +84,17 @@ export default class Home extends Component {
           }
       
           xhr.send();
-      });
+      });*/
+      var path = '/api/weather?m=' + month +'&d=' + day;
+      console.log(path);
+      var response = await fetch(path);
+      if (!response.ok) {
+        const message = `An error has occured: ${response.status}`;
+        throw new Error(message);
+      }
+      var weather = await response.json();
+      return weather;
+    
   }
 
   previousDate(){
@@ -114,6 +122,7 @@ export default class Home extends Component {
 
         var eventCards;
         if(this.state.eventView){
+          console.log(this.state.events);
             eventCards = (
             <div>
               <Row className="divider"><i className="bi bi-caret-left" onClick={this.previousDate}></i>

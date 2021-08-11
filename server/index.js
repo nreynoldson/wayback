@@ -33,8 +33,22 @@ app.get('/api/nutrition', async function(req, res){
         res.status(404).json({error: "Ingredient not found"});
 });
 
+app.get('/api/description', async function(req, res){
+    var search = req.query.q;
+    console.log(search);
+    if(search == undefined)
+        res.status(200).send("");
+    
+    var response = await getDescription(search);
+
+    res.status(200).json(response);
+});
+
+
 app.get('/api/image', async function(req, res){
     var search = req.query.q;
+    if(search == undefined)
+        search = 'historical';
     var response = await searchImages(search);
 
     res.status(200).json(response);
@@ -54,11 +68,12 @@ function assignTitle(description){
     for(var term of WEATHER){
         var re = new RegExp(term,"g");
         var match = description.match(re);
+        
         if(match != null){
-            return WEATHER[term];
+            return term;
         }
     }
-    return "weather";
+    return "bad weather";
 }
 
 async function getWeather(month, day){
@@ -78,12 +93,14 @@ async function getWeather(month, day){
                 var descriptor = parentNode.children().remove().end().text();
                 descriptor = descriptor.substring(3);
                 descriptor= descriptor.replace(/ *\([^)]*\) */g, "");
-                
+                var newtitle = assignTitle(descriptor);
+
                 var obj = {
-                    title: '',
                     year: year,
                     text: descriptor,
-                    links: [{title: assignTitle(descriptor)}]
+                    links: [
+                        {title: newtitle}
+                    ]
                 }
 			    events.push(obj);
             }
@@ -95,6 +112,77 @@ async function getWeather(month, day){
 	}
 };
 
+async function getDescription(searchTerm){
+    var url = 'https://www.weatherforyou.com/weather_history/index.php?m=' + month +'&d=' + day + '&y=2020';
+	try {
+		const { data } = await axios.get(url);
+		const $ = cheerio.load(data);
+        const results = {};
+        var events = [];
+
+		$('td > div > span').each((_idx, el) => {
+            if(($(el).text().length) <= 4){
+               
+                var year = $(el).text();
+               
+                var parentNode = $(el).parent();
+                var descriptor = parentNode.children().remove().end().text();
+                descriptor = descriptor.substring(3);
+                descriptor= descriptor.replace(/ *\([^)]*\) */g, "");
+                var newtitle = assignTitle(descriptor);
+
+                var obj = {
+                    year: year,
+                    text: descriptor,
+                    links: [
+                        {title: newtitle}
+                    ]
+                }
+			    events.push(obj);
+            }
+		});
+        results.data = events;
+		return results;
+	} catch (error) {
+		throw error;
+	}
+};
+
+/*async function getDescription(searchTerm){
+    console.log('in get description');
+    var url = "https://wikipedia-summary-scrape.herokuapp.com/" + searchTerm;
+
+    console.log(url);
+    return new Promise((resolve, reject) => {
+        console.log('resolving promise');
+      var xhr = new XMLHttpRequest();
+      
+      xhr.open("GET", url, true);
+      xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
+      xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
+      xhr.setRequestHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
+      xhr.setRequestHeader('Access-Control-Allow-Headers', 'Origin, Content-Type, X-Auth-Token');
+      xhr.onload = function(){
+          console.log(xhr.status);
+          console.log(xhr.responseText);
+          if(xhr.status == 200){
+            console.log(xhr.responseText);
+              var response = JSON.parse(xhr.responseText);
+               console.log(response);
+              if(response.length == 0){
+                response = null;
+            }
+              
+              resolve(response[0]);
+          }
+          else{
+              reject();
+          }
+      }
+  
+      xhr.send();
+  });
+}*/
 
 function searchImages(searchTerm){
     var url = 'https://ddg-image-search.herokuapp.com/search?q=' + searchTerm + '&num=' + 1;
