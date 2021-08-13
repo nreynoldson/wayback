@@ -2,16 +2,14 @@
 export function randomDate(){
     var month = randomInRange(1, 12);
     var max;
-    console.log(month);
 
     max = getMaxDay(month);
 
     var day = randomInRange(1, max);
-    console.log(day);
     return [month, day];
 }
 
-function randomInRange(min, max){
+export function randomInRange(min, max){
     return Math.floor(Math.random() * (max - min) + min);
 }
 
@@ -27,8 +25,6 @@ export function getNextDay(month, day){
     }
     else
         day = parseInt(day) + 1;
-    
-    console.log(month, day)
     return [month, day];
 }
 

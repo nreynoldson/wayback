@@ -10,6 +10,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 
 const MONTHS = ['null', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+
 export default class Home extends Component {
     constructor(props){
       super(props)
@@ -18,8 +19,6 @@ export default class Home extends Component {
           eventView: false,
           events: [],
           births: [],
-          deaths: []
-  
       }
       this.onSubmit = this.onSubmit.bind(this);
       this.requestEvent = this.requestEvent.bind(this);
@@ -29,72 +28,44 @@ export default class Home extends Component {
     }
 
     async onSubmit(m, d){
-        var events = await this.requestEvent(m, d);
-        var weather = await this.requestWeather(m, d);
+        let [events, weather] =
+            await Promise.all([
+                this.requestEvent(m, d), 
+                this.requestWeather(m,d)]);
         this.setState({
             month: m,
             day: d, 
             eventView: true,
             events: events.data.Events,
             births: events.data.Births,
-            deaths: events.data.Deaths,
             weather: weather.data
         });
-
     }
 
-    requestEvent(month, day){
+    async requestEvent(month, day){
         var url = 'http://history.muffinlabs.com/date/' + month + '/' + day;
-        return new Promise((resolve, reject) => {
-            var xhr = new XMLHttpRequest();
-            
-            xhr.open("GET", url, true);
-            xhr.onload = function(){
-                if(xhr.status == 200){
-                    var response = JSON.parse(xhr.responseText);
-                    resolve(response);
-                }
-                else{
-                    reject();
-                }
-            }
+        var response = await fetch(url);
+  
+        if (!response.ok) {
+          const message = `An error has occured: ${response.status}`;
+          throw new Error(message);
+        }
         
-            xhr.send();
-        });
+        var event = await response.json();
+        return event;
     }
-
-
 
     async requestWeather(month, day){
-      /*
-      var url = 'http://localhost:3001/api/weather?m=' + month + '&d=' + day;
-      return new Promise((resolve, reject) => {
-          var xhr = new XMLHttpRequest();
-          
-          xhr.open("GET", url, true);
-          xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
-          xhr.onload = function(){
-              if(xhr.status == 200){
-                  var response = JSON.parse(xhr.responseText);
-                  resolve(response);
-              }
-              else{
-                  reject();
-              }
-          }
-      
-          xhr.send();
-      });*/
-      var path = '/api/weather?m=' + month +'&d=' + day;
-      console.log(path);
+      var path = '/weather?m=' + month +'&d=' + day;
       var response = await fetch(path);
+
       if (!response.ok) {
         const message = `An error has occured: ${response.status}`;
         throw new Error(message);
       }
+
       var weather = await response.json();
       return weather;
-    
   }
 
   previousDate(){
@@ -139,7 +110,6 @@ export default class Home extends Component {
             <Content className ="content" date={this.state.date}
             events={this.state.events}
             births={this.state.births}
-            deaths={this.state.deaths}
             weather={this.state.weather}
             ></Content>
             </Col>
